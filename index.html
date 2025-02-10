@@ -2,74 +2,220 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RedemptioN</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kalpten İtiraf</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .container {
+            position: relative;
+            width: 95%;
+            max-width: 500px;
+            margin: 20px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .envelope {
+            width: 100%;
+            height: 200px;
+            background: #ff416c;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            backface-visibility: hidden;
+        }
+
+        .letter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 90%;
+            max-width: 500px;
+            height: 70vh;
+            max-height: 600px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5) rotateX(-30deg);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .open .envelope {
+            transform: scale(0.8) rotateX(180deg);
+            opacity: 0;
+        }
+
+        .open .letter {
+            transform: translate(-50%, -50%) scale(1) rotateX(0deg);
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .letter-header {
+            text-align: center;
+            border-bottom: 2px solid #ff416c;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .letter-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #444;
+            padding: 0 10px;
+        }
+
+        .hearts-effect {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .particle {
+            position: absolute;
+            color: #ff416c;
+            font-size: 18px;
+            animation: float 4s ease-out infinite;
+            opacity: 0;
+            user-select: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        @media (max-width: 480px) {
+            .envelope {
+                height: 180px;
+                font-size: 1.3rem;
+            }
+
+            .letter {
+                padding: 20px;
+                height: 80vh;
+            }
+
+            .letter-content {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            .letter-header h2 {
+                font-size: 1.4rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .letter-content {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 65, 108, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff416c;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="top-bar">
-            <div class="left">
-                <a href="#" class="sound-icon">🔊</a>
+    <div class="container" onclick="this.classList.toggle('open'); addHearts()">
+        <div class="envelope">❤ TIKLA AÇ ❤</div>
+        <div class="letter">
+            <div class="letter-header">
+                <h2 style="color: #ff416c; margin: 0;">Sevgili Zeynep</h2>
             </div>
-        </div>
-        
-        <div class="nav-top">
-            <a href="#" class="ts-button">
-                <img src="ts-icon.png" alt="TeamSpeak" class="ts-icon">
-                TeamSpeak 3 Sunucusuna Bağlan
-            </a>
-            <div class="logo">
-                <img src="logo.png" alt="RedemptioN Logo">
-            </div>
-            <div class="auth-buttons">
-                <button class="login">Giriş Yap</button>
-                <button class="register">Kayıt Ol</button>
-            </div>
-        </div>
+            <div class="letter-content">
+                <p>Merhaba Zeynep,</p>
 
-        <nav class="main-nav">
-            <a href="index.html" class="nav-item"><i class="icon">🏠</i> Anasayfa</a>
-            <a href="market.html" class="nav-item"><i class="icon">🛒</i> Market</a>
-            <a href="bakiye-yukle.html" class="nav-item"><i class="icon">💰</i> Bakiye Yükle</a>
-            <a href="yoklama.html" class="nav-item"><i class="icon">👤</i> Yoklama</a>
-            <a href="oyuncular.html" class="nav-item"><i class="icon">🎮</i> Oyuncular</a>
-            <a href="yonetim.html" class="nav-item"><i class="icon">👥</i> Yönetim Ekibimiz</a>
-            <a href="destek.html" class="nav-item"><i class="icon">🎧</i> Destek</a>
-            <a href="kurallar.html" class="nav-item"><i class="icon">📋</i> Kurallar</a>
-        </nav>
-    </header>
-
-    <main>
-        <div class="content-container">
-            <section class="announcements">
-                <h2>Duyurular</h2>
-                <div class="announcement-card">
-                    <img src="logo.png" alt="Duyuru" class="announcement-image">
-                    <div class="announcement-content">
-                        <div class="date">25.05.2024</div>
-                        <h3>Etkinlik Saatleri</h3>
-                        <p>ETKİNLİK SAATLERİ• Pazartesi : ( 21:00 ) MAÇ [+30 DAKİKA AFK ATILACAK]• Salı : ( 21:00) MAÇ [+30 DAKİKA AFK ATILACAK]• Çarşamba : ( 21:00) MAÇ [+30 DAKİKA AFK ATILACAK]• Perşembe : ( 21:00...</p>
-                        <button class="read-more">Devamını Oku</button>
-                    </div>
-                </div>
-            </section>
-
-            <aside class="instagram-widget">
-                <h2>Instagram</h2>
-                <div class="instagram-content">
-                    <div class="profile-info">
-                        <img src="profile.png" alt="RedemptionZirve" class="profile-pic">
-                        <div class="profile-text">
-                            <h3>RedemptionZirve</h3>
-                            <p>RedemptioN Jailbreak Ailesi</p>
-                            <p>60 takipçi</p>
-                            <p>14 gönderi</p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
+                <p>
+                  Sana söylemek istediğim kelimeler, yüreğimde uzun süredir birikmişti. Belki bu mesaj, içindeki kırılganlığı ortaya çıkarır; belki de gözlerinden yaşlar süzülecek. Fakat hislerimi sana söylemeden, içimde tutarak gitmek istemedim.
+                </p>
+                <br>
+                <p>
+                  Gerçekten senden hoşlanıyorum. Bu duygu, aklımda tam olarak açıklayamadığım ani ve güçlü bir his; hayatın beklenmedik dönemeçleri gibi, kendiliğinden ve tarifsizce ortaya çıktı. Daha önce ailevi nedenlerden bahsetmiştim; şimdi ise, babamın onayıyla evden ayrılmak zorunda olduğumu bilmeni istiyorum. Yoldayım ve her adımımda seni, varlığının sıcaklığını düşünmeden edemiyorum.
+                </p>
+                <br>
+                <p>
+                  Biliyorum ki, aşkın sana eskisi gibi dokunmadığını, belki de zorlu günlerin gölgesinde kaldığını hissediyorum. Fakat bu hisler, kontrol edilemez bir şekilde içimde filizlendi. Ne yazık ki, yollarımızın yeniden kesişmeyeceğini düşünüyorum. Belki bu satırları okurken, gözlerinden süzülen yaşlar, içten bir vedanın sessiz tanığı olur.
+                </p>
+                <br>
+                <p>
+                  Ailenle yaşadığın sıkıntıları bir gün geride bırakıp, kalbinde gerçek mutluluğa yer açacağına inanıyorum. Hayatında sana layık, seni gerçekten mutlu edecek birini bulman dileğiyle… Kalbimde her zaman senin için özel bir yer olacak.
+                </p>
+                <br>
+                <p>Elveda,</p>
+                <br>
+                <p>Zeynep</p>
+                
+                <p style="text-align: right; color: #ff416c; font-weight: bold; margin-top: 20px;">~ Berkay</p>
+             </div>
         </div>
-    </main>
+    </div>
+
+    <div class="hearts-effect"></div>
+
+    <script>
+        function addHearts() {
+            const container = document.querySelector('.hearts-effect');
+            const heartCount = window.innerWidth < 480 ? 8 : 12;
+            
+            for(let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'particle';
+                heart.innerHTML = '❤';
+                heart.style.left = Math.random() * 95 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(heart);
+            }
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 4000);
+        }
+
+        // Sürekli kalp animasyonu
+        setInterval(addHearts, 3000);
+    </script>
 </body>
 </html>
