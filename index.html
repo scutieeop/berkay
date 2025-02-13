@@ -2,204 +2,198 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kalpten İtiraf</title>
+    <title>Senin İçin Bir Sürprizim Var ❤️</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            min-height: 100vh;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            align-items: center;
+            margin: 0;
             font-family: 'Arial', sans-serif;
-            overflow: hidden;
-            touch-action: manipulation;
+            cursor: default;
         }
 
-        .container {
+        .gift-container {
             position: relative;
-            width: 95%;
-            max-width: 500px;
-            margin: 20px;
-            cursor: pointer;
-            perspective: 1000px;
-        }
-
-        .envelope {
-            width: 100%;
-            height: 200px;
-            background: #ff416c;
-            position: relative;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 600;
-            backface-visibility: hidden;
-        }
-
-        .letter {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 90%;
-            max-width: 500px;
-            height: 70vh;
-            max-height: 600px;
-            background: #fff;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.5) rotateX(-30deg);
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .open .envelope {
-            transform: scale(0.8) rotateX(180deg);
-            opacity: 0;
-        }
-
-        .open .letter {
-            transform: translate(-50%, -50%) scale(1) rotateX(0deg);
-            opacity: 1;
-            z-index: 1;
-        }
-
-        .letter-header {
             text-align: center;
-            border-bottom: 2px solid #ff416c;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
         }
 
-        .letter-content {
-            font-size: 1rem;
-            line-height: 1.7;
-            color: #444;
-            padding: 0 10px;
+        .gift-box {
+            width: 200px;
+            height: 120px;
+            background: #e74c3c;
+            position: relative;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        .hearts-effect {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
+        .gift-box:hover {
+            transform: scale(1.05);
         }
 
-        .particle {
+        .lid {
+            width: 220px;
+            height: 40px;
+            background: #c0392b;
             position: absolute;
-            color: #ff416c;
+            top: -40px;
+            left: -10px;
+            border-radius: 5px 5px 0 0;
+            transform-origin: bottom;
+            transition: transform 0.5s;
+        }
+
+        .ribbon {
+            width: 40px;
+            height: 100%;
+            background: #fff;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.3;
+        }
+
+        .message {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            position: relative;
+            animation: fadeIn 1.5s;
+            margin: 20px auto;
+        }
+
+        .message p {
             font-size: 18px;
-            animation: float 4s ease-out infinite;
+            line-height: 1.6;
+            color: #333;
+            margin: 15px 0;
+        }
+
+        .hearts span {
+            position: absolute;
+            animation: heartFloat 3s infinite;
+            font-size: 24px;
             opacity: 0;
-            user-select: none;
         }
 
-        @keyframes float {
-            0% { transform: translateY(0) scale(0.8); opacity: 0; }
-            20% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        @keyframes lidOpen {
+            0% { transform: rotateX(0); }
+            100% { transform: rotateX(180deg); }
         }
 
-        @media (max-width: 480px) {
-            .envelope {
-                height: 180px;
-                font-size: 1.3rem;
-            }
-
-            .letter {
-                padding: 20px;
-                height: 80vh;
-            }
-
-            .letter-content {
-                font-size: 0.95rem;
-                line-height: 1.6;
-            }
-
-            .letter-header h2 {
-                font-size: 1.4rem;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 360px) {
-            .letter-content {
-                font-size: 0.9rem;
-            }
+        @keyframes heartFloat {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px); opacity: 0; }
         }
 
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 6px;
+        .question {
+            font-size: 24px;
+            color: #e74c3c;
+            margin-top: 20px;
+            font-weight: bold;
         }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 65, 108, 0.1);
-            border-radius: 3px;
+        .heart-emoji {
+            font-size: 40px;
+            animation: pulse 1.5s infinite;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: #ff416c;
-            border-radius: 3px;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
-    <div class="container" onclick="this.classList.toggle('open'); addHearts()">
-        <div class="envelope">❤ TIKLA AÇ ❤</div>
-        <div class="letter">
-            <div class="letter-header">
-                <h2 style="color: #ff416c; margin: 0;">Sevgili Zeynep</h2>
+    <div class="gift-container">
+        <div class="gift-box" onclick="openGift()">
+            <div class="lid">
+                <div class="ribbon"></div>
             </div>
-            <div class="letter-content">
-                <p>Merhaba Zeynep, Sana şunu soylemek istiyorum . belki iyi bakarsın belkide kötü bunu söylemeden gitmek istemedim. </p> <br>
-                <p>Yani senden hoşlaniyorum . Sebebini bilmiorum anlik olan birşey bu ve daha once den söyledigim ailevi nedenler ile suan bunu sana anlatmıştım ve evden gittim</p> <br>
-                <p>Babam a gidecegimi söyleyip babamda bunu onayladi ve suanda yoldayim zaten büyük ihtimal hem site hemde otomatik mesaj hazirlanicak yani bunu sana söylemek istedim</p> <br>
-                 <p>Aşk ' a inanmadigini biliorum sende zor günlerden geçtigini ama bu istemsizce oluyor neyseki daha görüşemiyeceğiz büyük ihtimal güzel bir şekilde bakmassin bu mesajıma</p><br>
-                 <p>Ailen ile olan sorunlarini aşıp daha güzel bir aile olabilcegine inaniyorum belki.. daha dogru birisini bulmak ve seni mutlu gormek dileği ile ....</p>
- 
-                <p style="text-align: right; color: #ff416c; font-weight: bold; margin-top: 20px;">~ Berkay</p>
-             </div>
+        </div>
+        
+        <div class="message" id="message">
+            <div class="hearts">
+                <span style="left: 10%;">❤️</span>
+                <span style="left: 30%;">💖</span>
+                <span style="left: 50%;">💕</span>
+                <span style="left: 70%;">💞</span>
+                <span style="left: 90%;">💘</span>
+            </div>
+            
+            <h2 style="color: #e74c3c; font-family: 'Brush Script MT', cursive;">Hayatımın En Güzel Sürprizi...</h2>
+            
+            <p>Hayatın bazen hiç beklemediğin anlarda en güzel sürprizleri yaptığını biliyor musun? İşte sen, benim için öyle bir sürprizsin...</p>
+            
+            <p>Her şeyin bu kadar doğal ve özel olabileceğini seninle öğrendim. Bazen sadece yanımda olman yetiyor; çünkü senin varlığın bile huzur veriyor.</p>
+            
+            <p class="question">Bu hikayeyi birlikte yazmaya var mısın? <br> 
+            <span class="heart-emoji">❤️</span><br>
+            Benimle çıkar mısın?</p>
         </div>
     </div>
 
-    <div class="hearts-effect"></div>
-
     <script>
-        function addHearts() {
-            const container = document.querySelector('.hearts-effect');
-            const heartCount = window.innerWidth < 480 ? 8 : 12;
+        function openGift() {
+            const lid = document.querySelector('.lid');
+            const message = document.getElementById('message');
             
-            for(let i = 0; i < heartCount; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'particle';
-                heart.innerHTML = '❤';
-                heart.style.left = Math.random() * 95 + '%';
-                heart.style.animationDelay = Math.random() * 2 + 's';
-                container.appendChild(heart);
-            }
+            // Kutu kapağı animasyonu
+            lid.style.animation = 'lidOpen 0.8s forwards';
             
+            // Mesajı göster
             setTimeout(() => {
-                container.innerHTML = '';
-            }, 4000);
+                message.style.display = 'block';
+                startConfetti();
+            }, 800);
+            
+            // Tıklamayı kapat
+            event.target.style.pointerEvents = 'none';
         }
 
-        // Sürekli kalp animasyonu
-        setInterval(addHearts, 3000);
+        function startConfetti() {
+            // Basit bir konfeti efekti
+            const colors = ['#ff6b6b', '#ff8e8e', '#e74c3c', '#c0392b'];
+            for(let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.borderRadius = '50%';
+                confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
+                document.body.appendChild(confetti);
+
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Konfeti animasyonu
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                to {
+                    transform: translateY(110vh) rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
