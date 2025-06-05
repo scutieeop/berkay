@@ -60,6 +60,52 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             font-weight: bold;
+            min-width: 150px;
+            min-height: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            button {
+                padding: 12px 25px;
+                font-size: 1.1em;
+                min-width: 140px;
+                min-height: 45px;
+            }
+            
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .message {
+                font-size: 1.1em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            button {
+                padding: 10px 20px;
+                font-size: 1em;
+                min-width: 120px;
+                min-height: 40px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .message {
+                font-size: 1em;
+            }
         }
         
         .yes-btn {
@@ -173,12 +219,21 @@
         function moveNoButton() {
             noClickCount++;
             
-            // Rastgele pozisyon hesapla
-            const maxX = window.innerWidth - noButton.offsetWidth - 50;
-            const maxY = window.innerHeight - noButton.offsetHeight - 50;
+            // Ekran boyutlarını al
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const buttonWidth = 150; // Tahmini buton genişliği
+            const buttonHeight = 50; // Tahmini buton yüksekliği
             
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
+            // Güvenli alan hesapla (kenarlardan 20px içeride kal)
+            const minX = 20;
+            const maxX = screenWidth - buttonWidth - 20;
+            const minY = 20;
+            const maxY = Math.min(screenHeight - buttonHeight - 20, screenHeight * 0.8); // En fazla ekranın %80'ine kadar
+            
+            // Rastgele pozisyon hesapla güvenli alan içinde
+            const randomX = Math.random() * (maxX - minX) + minX;
+            const randomY = Math.random() * (maxY - minY) + minY;
             
             noButton.style.position = 'fixed';
             noButton.style.left = randomX + 'px';
