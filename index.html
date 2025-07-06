@@ -1,482 +1,157 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, #f8bbd0 0%, #b3e5fc 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background-attachment: fixed;
-    position: relative;
-    overflow-x: hidden;
-}
-
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    z-index: -2;
-}
-
-.container {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    z-index: 1;
-}
-
-.card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.07);
-    overflow: hidden;
-    position: relative;
-    transition: all 0.4s ease;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transform: rotate(45deg);
-    pointer-events: none;
-    z-index: 1;
-    animation: shine 6s infinite;
-}
-
-@keyframes shine {
-    0% {
-        left: -50%;
-        top: -50%;
-    }
-    100% {
-        left: 150%;
-        top: 150%;
-    }
-}
-
-.card-content {
-    padding: 40px 30px;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-
-.heart-container {
-    margin-bottom: 25px;
-    position: relative;
-}
-
-.heart-icon {
-    color: #ff4b6c;
-    font-size: 60px;
-    animation: pulse 1.5s infinite;
-    filter: drop-shadow(0 5px 15px rgba(255, 75, 108, 0.5));
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-.title {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 32px;
-    font-family: 'Dancing Script', cursive;
-    font-weight: 700;
-    background: linear-gradient(to right, #ff4b6c, #ff8e53);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.message {
-    color: #555;
-    margin-bottom: 30px;
-    line-height: 1.7;
-    font-size: 16px;
-}
-
-.optional-text {
-    font-size: 14px;
-    color: #888;
-    font-style: italic;
-    margin-bottom: 15px;
-    padding-left: 25px;
-}
-
-.btn {
-    background: linear-gradient(to right, #ff4b6c, #ff8e53);
-    color: white;
-    border: none;
-    padding: 14px 30px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    margin: 10px 5px;
-    letter-spacing: 0.5px;
-    box-shadow: 0 5px 15px rgba(255, 75, 108, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
-}
-
-.btn:hover::before {
-    left: 100%;
-}
-
-.btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(255, 75, 108, 0.4);
-}
-
-.btn:active {
-    transform: translateY(0);
-    box-shadow: 0 3px 10px rgba(255, 75, 108, 0.3);
-}
-
-.no-btn {
-    background: linear-gradient(to right, #6c757d, #495057);
-    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
-}
-
-.no-btn:hover {
-    box-shadow: 0 8px 20px rgba(108, 117, 125, 0.4);
-}
-
-.hidden-message {
-    display: none;
-    margin-top: 20px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-}
-
-.hidden-message.show {
-    display: block;
-    opacity: 1;
-}
-
-.response-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.response-message {
-    margin-top: 20px;
-    font-weight: 600;
-    color: #ff4b6c;
-    height: 50px;
-}
-
-.flowers {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.flower {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.7;
-}
-
-.flower1 {
-    top: 10%;
-    left: -20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4b6c'%3E%3Cpath d='M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,12A1.5,1.5 0 0,1 9,13.5A1.5,1.5 0 0,1 7.5,15A1.5,1.5 0 0,1 6,13.5A1.5,1.5 0 0,1 7.5,12M12,6A1.5,1.5 0 0,1 13.5,7.5A1.5,1.5 0 0,1 12,9A1.5,1.5 0 0,1 10.5,7.5A1.5,1.5 0 0,1 12,6M16.5,12A1.5,1.5 0 0,1 18,13.5A1.5,1.5 0 0,1 16.5,15A1.5,1.5 0 0,1 15,13.5A1.5,1.5 0 0,1 16.5,12M12,15A1.5,1.5 0 0,1 13.5,16.5A1.5,1.5 0 0,1 12,18A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 12,15Z'/%3E%3C/svg%3E");
-    animation: float 8s ease-in-out infinite;
-}
-
-.flower2 {
-    top: 70%;
-    right: -20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4b6c'%3E%3Cpath d='M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,12A1.5,1.5 0 0,1 9,13.5A1.5,1.5 0 0,1 7.5,15A1.5,1.5 0 0,1 6,13.5A1.5,1.5 0 0,1 7.5,12M12,6A1.5,1.5 0 0,1 13.5,7.5A1.5,1.5 0 0,1 12,9A1.5,1.5 0 0,1 10.5,7.5A1.5,1.5 0 0,1 12,6M16.5,12A1.5,1.5 0 0,1 18,13.5A1.5,1.5 0 0,1 16.5,15A1.5,1.5 0 0,1 15,13.5A1.5,1.5 0 0,1 16.5,12M12,15A1.5,1.5 0 0,1 13.5,16.5A1.5,1.5 0 0,1 12,18A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 12,15Z'/%3E%3C/svg%3E");
-    animation: float 10s ease-in-out infinite;
-    animation-delay: 1s;
-}
-
-.flower3 {
-    bottom: 20%;
-    left: 50%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4b6c'%3E%3Cpath d='M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,12A1.5,1.5 0 0,1 9,13.5A1.5,1.5 0 0,1 7.5,15A1.5,1.5 0 0,1 6,13.5A1.5,1.5 0 0,1 7.5,12M12,6A1.5,1.5 0 0,1 13.5,7.5A1.5,1.5 0 0,1 12,9A1.5,1.5 0 0,1 10.5,7.5A1.5,1.5 0 0,1 12,6M16.5,12A1.5,1.5 0 0,1 18,13.5A1.5,1.5 0 0,1 16.5,15A1.5,1.5 0 0,1 15,13.5A1.5,1.5 0 0,1 16.5,12M12,15A1.5,1.5 0 0,1 13.5,16.5A1.5,1.5 0 0,1 12,18A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 12,15Z'/%3E%3C/svg%3E");
-    animation: float 9s ease-in-out infinite;
-    animation-delay: 2s;
-}
-
-@keyframes float {
-    0% {
-        transform: translateY(0) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-15px) rotate(10deg);
-    }
-    100% {
-        transform: translateY(0) rotate(0deg);
-    }
-}
-
-.question-container {
-    display: none;
-    text-align: left;
-    margin-top: 25px;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-}
-
-.question-container:hover {
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-    transform: translateY(-2px);
-}
-
-.question-container.active {
-    display: block;
-    animation: fadeIn 0.5s;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.question {
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #333;
-    font-size: 18px;
-    position: relative;
-    padding-left: 25px;
-}
-
-.question::before {
-    content: '❤';
-    position: absolute;
-    left: 0;
-    color: #ff4b6c;
-}
-
-textarea {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #e1e1e1;
-    border-radius: 12px;
-    resize: vertical;
-    min-height: 100px;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
-    font-size: 15px;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-textarea:focus {
-    outline: none;
-    border-color: #ff4b6c;
-    box-shadow: 0 0 0 3px rgba(255, 75, 108, 0.2);
-}
-
-.input-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-    font-size: 16px;
-    padding-left: 5px;
-}
-
-input[type="text"],
-input[type="tel"] {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #e1e1e1;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    font-size: 15px;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-input[type="text"]:focus,
-input[type="tel"]:focus {
-    outline: none;
-    border-color: #ff4b6c;
-    box-shadow: 0 0 0 3px rgba(255, 75, 108, 0.2);
-}
-
-.progress-container {
-    margin-bottom: 25px;
-    width: 100%;
-    background-color: rgba(241, 241, 241, 0.5);
-    border-radius: 15px;
-    overflow: hidden;
-    height: 12px;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(to right, #ff4b6c, #ff8e53);
-    width: 0%;
-    transition: width 0.5s ease;
-    border-radius: 15px;
-    box-shadow: 0 2px 5px rgba(255, 75, 108, 0.3);
-}
-
-.final-message {
-    display: none;
-    margin-top: 30px;
-    padding: 25px;
-    background-color: #f8f9fa;
-    border-radius: 15px;
-    border-left: 5px solid #ff4b6c;
-    text-align: left;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
-
-.final-message.show {
-    display: block;
-    animation: fadeIn 0.7s;
-}
-
-.final-message h3 {
-    color: #ff4b6c;
-    margin-bottom: 15px;
-    font-size: 22px;
-}
-
-.loading {
-    display: none;
-    margin: 30px auto;
-    text-align: center;
-}
-
-.loading .dots {
-    display: inline-block;
-}
-
-.loading .dots span {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #ff4b6c;
-    margin: 0 5px;
-    animation: loading 1.4s infinite ease-in-out both;
-}
-
-.loading .dots span:nth-child(1) {
-    animation-delay: -0.32s;
-}
-
-.loading .dots span:nth-child(2) {
-    animation-delay: -0.16s;
-}
-
-.loading p {
-    margin-top: 15px;
-    color: #666;
-}
-
-@keyframes loading {
-    0%, 80%, 100% { 
-        transform: scale(0);
-    } 
-    40% { 
-        transform: scale(1.0);
-    }
-}
-
-/* Add floating hearts to the background */
-.floating-hearts {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.heart {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4b6c'%3E%3Cpath d='M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z'/%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.3;
-    animation: floatHeart 15s linear infinite;
-}
-
-@keyframes floatHeart {
-    0% {
-        transform: translateY(100vh) scale(0.5) rotate(0deg);
-        opacity: 0;
-    }
-    10% {
-        opacity: 0.3;
-    }
-    90% {
-        opacity: 0.2;
-    }
-    100% {
-        transform: translateY(-100px) scale(1) rotate(360deg);
-        opacity: 0;
-    }
-} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <div class="container">
+        <div class="card">
+            <div class="card-content">
+                <div class="heart-container">
+                    <i class="fas fa-heart heart-icon"></i>
+                </div>
+                <h1 class="title">Sana bir şey söylemek istiyorum...</h1>
+                <p class="message">Seninle tanıştığım günden beri hayatım değişti. Birkaç soruya cevap vererek bana kendini daha iyi tanıtır mısın?</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                
+                <!-- Initial Button -->
+                <button id="startQuestions" class="btn"><i class="fas fa-heart"></i> Başla</button>
+                
+                <!-- Personal Info -->
+                <div id="personalInfo" class="question-container">
+                    <div class="question">Önce biraz seni tanıyalım:</div>
+                    <div class="input-group">
+                        <label for="userName"><i class="fas fa-user"></i> Adın:</label>
+                        <input type="text" id="userName" placeholder="Adını gir...">
+                    </div>
+                    <button id="nextPersonal" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 1 -->
+                <div id="question1" class="question-container">
+                    <div class="question">1. Benimle sevgili olursan bana neler vaadedersin?</div>
+                    <textarea id="answer1" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ1" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 2 -->
+                <div id="question2" class="question-container">
+                    <div class="question">2. Birlikte yapmak istediğin üç şey nedir?</div>
+                    <textarea id="answer2" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ2" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 3 -->
+                <div id="question3" class="question-container">
+                    <div class="question">3. Sence bir ilişkide en önemli şey nedir?</div>
+                    <textarea id="answer3" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ3" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 4 -->
+                <div id="question4" class="question-container">
+                    <div class="question">4. Hayalindeki mükemmel randevu nasıl olurdu?</div>
+                    <textarea id="answer4" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ4" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 5 -->
+                <div id="question5" class="question-container">
+                    <div class="question">5. Beni neden seviyorsun?</div>
+                    <textarea id="answer5" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ5" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 6 -->
+                <div id="question6" class="question-container">
+                    <div class="question">6. Benim en sevdiğin özelliğim nedir?</div>
+                    <textarea id="answer6" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ6" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 7 -->
+                <div id="question7" class="question-container">
+                    <div class="question">7. Benimle nereye gitmek istersin?</div>
+                    <textarea id="answer7" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ7" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 8 -->
+                <div id="question8" class="question-container">
+                    <div class="question">8. Bana söylemek istediğin ama söyleyemediğin bir şey var mı?</div>
+                    <textarea id="answer8" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ8" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 9 -->
+                <div id="question9" class="question-container">
+                    <div class="question">9. Benim hakkımda en çok neyi merak ediyorsun?</div>
+                    <textarea id="answer9" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ9" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Question 10 -->
+                <div id="question10" class="question-container">
+                    <div class="question">10. Hayalindeki ilişki nasıl olurdu?</div>
+                    <textarea id="answer10" placeholder="Cevabını buraya yaz..."></textarea>
+                    <button id="nextQ10" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Phone Number (Optional) -->
+                <div id="phoneQuestion" class="question-container">
+                    <div class="question">Bana güveniyorsan, telefon numaranı yazar mısın?</div>
+                    <p class="optional-text">Bu alan isteğe bağlıdır. Dilersen boş bırakabilirsin.</p>
+                    <div class="input-group">
+                        <label for="userPhone"><i class="fas fa-phone"></i> Telefon Numaran:</label>
+                        <input type="tel" id="userPhone" placeholder="Telefon numaranı gir (isteğe bağlı)...">
+                    </div>
+                    <button id="nextPhone" class="btn">Devam Et <i class="fas fa-arrow-right"></i></button>
+                </div>
+                
+                <!-- Final Question -->
+                <div id="finalQuestion" class="question-container">
+                    <div class="question">Son ve en önemli soru:</div>
+                    <h2>Benimle sevgili olmak ister misin?</h2>
+                    <div class="response-buttons">
+                        <button id="yesBtn" class="btn yes-btn"><i class="fas fa-heart"></i> Evet</button>
+                        <button id="noBtn" class="btn no-btn"><i class="fas fa-times"></i> Hayır</button>
+                    </div>
+                </div>
+                
+                <!-- Loading Animation -->
+                <div id="loading" class="loading">
+                    <div class="dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <p>Cevabın işleniyor...</p>
+                </div>
+                
+                <!-- Final Message -->
+                <div id="finalMessage" class="final-message">
+                    <h3><i class="fas fa-heart"></i> Teşekkür ederim! ❤️</h3>
+                    <p>Cevapların için teşekkürler. Kararın tamamen sana ait ve buna saygı duyuyorum.</p>
+                    <p>Seninle geçirdiğim her an çok değerli.</p>
+                </div>
+            </div>
+        </div>
+        <div class="flowers">
+            <div class="flower flower1"></div>
+            <div class="flower flower2"></div>
+            <div class="flower flower3"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
