@@ -1,569 +1,426 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Create loading overlay
-    const loadingOverlay = document.createElement('div');
-    loadingOverlay.className = 'loading-overlay';
-    loadingOverlay.innerHTML = '<div class="loading-heart">❤</div>';
-    document.body.appendChild(loadingOverlay);
-
-    // Mobile detection with more reliable methods
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-                    || window.innerWidth <= 768;
-                    
-    // Set mobile class on body for CSS targeting
-    if (isMobile) {
-        document.body.classList.add('mobile-device');
-        
-        // Set specific type of mobile
-        if (window.innerWidth <= 480) {
-            document.body.classList.add('small-mobile');
-        }
-        
-        if (window.matchMedia("(orientation: landscape)").matches) {
-            document.body.classList.add('landscape');
-        }
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const startButton = document.getElementById('startQuestions');
+    const personalInfo = document.getElementById('personalInfo');
+    const question1 = document.getElementById('question1');
+    const question2 = document.getElementById('question2');
+    const question3 = document.getElementById('question3');
+    const question4 = document.getElementById('question4');
+    const question5 = document.getElementById('question5');
+    const question6 = document.getElementById('question6');
+    const question7 = document.getElementById('question7');
+    const question8 = document.getElementById('question8');
+    const question9 = document.getElementById('question9');
+    const question10 = document.getElementById('question10');
+    const phoneQuestion = document.getElementById('phoneQuestion');
+    const finalQuestion = document.getElementById('finalQuestion');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const loading = document.getElementById('loading');
+    const finalMessage = document.getElementById('finalMessage');
+    const progressBar = document.getElementById('progressBar');
+    const floatingHearts = document.getElementById('floatingHearts');
     
-    // Simple feature detection for touch
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouchDevice) {
-        document.body.classList.add('touch-device');
-    }
-    
-    // Add animation to stanzas on scroll
-    const stanzas = document.querySelectorAll('.stanza');
-    
-    // Initially set stanzas to be invisible
-    stanzas.forEach(stanza => {
-        stanza.style.opacity = '0';
-        stanza.style.transform = 'translateY(30px)';
-        stanza.style.transition = 'opacity 1s ease, transform 1s ease';
-    });
-    
-    // Function to reveal stanzas when they come into view
-    function revealStanzas() {
-        stanzas.forEach((stanza, index) => {
-            // Get element position relative to viewport
-            const rect = stanza.getBoundingClientRect();
-            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-            
-            // Check if element is in viewport
-            if (rect.top <= windowHeight * 0.85) {
-                // Add delay based on index for cascade effect
-                // Shorter delay on mobile for better responsiveness
-                const delay = isMobile ? index * 150 : index * 300;
-                setTimeout(() => {
-                    stanza.style.opacity = '1';
-                    stanza.style.transform = 'translateY(0)';
-                }, delay);
-            }
-        });
-    }
-    
-    // Call once when page loads
-    revealStanzas();
-    
-    // Then on scroll - throttled for performance
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
-        if (!scrollTimeout) {
-            scrollTimeout = setTimeout(() => {
-                revealStanzas();
-                scrollTimeout = null;
-            }, 100);
-        }
-    });
-    
-    // Add text highlight effect when clicking on lines
-    const poemLines = document.querySelectorAll('.stanza p');
-    
-    poemLines.forEach(line => {
-        const eventType = isTouchDevice ? 'touchend' : 'click';
-        
-        line.addEventListener(eventType, (e) => {
-            if (isTouchDevice) {
-                e.preventDefault(); // Prevent double-tap zoom on mobile
-            }
-            
-            // Remove active class from all lines
-            poemLines.forEach(p => p.classList.remove('active-line'));
-            
-            // Add active class to clicked line
-            line.classList.add('active-line');
-            
-            // Add highlight style for active line
-            document.head.insertAdjacentHTML('beforeend', `
-                <style>
-                    .active-line {
-                        font-weight: bold;
-                        color: var(--primary-color);
-                        transform: translateX(10px) !important;
-                        text-shadow: 1px 1px 1px rgba(0,0,0,0.05);
-                    }
-                </style>
-            `);
-            
-            // Create small burst of petals - fewer on mobile
-            const petalCount = isMobile ? 3 : 5;
-            createPetalBurst(petalCount, line.getBoundingClientRect());
-        });
-    });
-    
-    // Add dynamic color based on time of day
-    function updateColors() {
-        const hour = new Date().getHours();
-        let primaryColor, secondaryColor, bgColor;
-        
-        if (hour >= 5 && hour < 8) {
-            // Dawn
-            primaryColor = '#ff9e7a';
-            secondaryColor = '#e76f51';
-            bgColor = '#fef1ed';
-        } else if (hour >= 8 && hour < 16) {
-            // Day
-            primaryColor = '#d23669';
-            secondaryColor = '#a61e4d';
-            bgColor = '#fef8f9';
-        } else if (hour >= 16 && hour < 19) {
-            // Dusk
-            primaryColor = '#e76f51';
-            secondaryColor = '#bc4b29';
-            bgColor = '#fff0eb';
-        } else {
-            // Night
-            primaryColor = '#7b2cbf';
-            secondaryColor = '#5a189a';
-            bgColor = '#f8f9fe';
-        }
-        
-        document.documentElement.style.setProperty('--primary-color', primaryColor);
-        document.documentElement.style.setProperty('--secondary-color', secondaryColor);
-        document.documentElement.style.setProperty('--background-color', bgColor);
-    }
-    
-    updateColors();
-    
-    // Flower box and image modal functionality
-    const flowerBox = document.getElementById('flowerBox');
-    const imageModal = document.getElementById('imageModal');
-    const closeModal = document.getElementById('closeModal');
-    
-    // Open modal when flower box is clicked/tapped
-    flowerBox.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
-        if (isTouchDevice) {
-            e.preventDefault(); // Prevent double-tap zoom
-        }
-        
-        imageModal.classList.add('active');
-        imageModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-        
-        // Add floating effect to the flowers when box is clicked
-        document.querySelectorAll('.flower').forEach(flower => {
-            flower.style.animation = 'float 3s infinite ease-in-out';
-        });
-        
-        // Create burst of petals - reduced on mobile
-        const petalCount = isMobile ? 10 : 30;
-        createPetalBurst(petalCount, flowerBox.getBoundingClientRect());
-    });
-    
-    // Close modal when close button is clicked
-    closeModal.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
-        if (isTouchDevice) {
-            e.preventDefault();
-        }
-        
-        imageModal.classList.remove('active');
-        document.body.style.overflow = ''; // Restore scrolling
-        setTimeout(() => {
-            imageModal.style.display = 'none';
-        }, 400);
-    });
-    
-    // Also close modal when clicking outside the image
-    imageModal.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
-        if (e.target === imageModal) {
-            if (isTouchDevice) {
-                e.preventDefault();
-            }
-            
-            imageModal.classList.remove('active');
-            document.body.style.overflow = ''; // Restore scrolling
-            setTimeout(() => {
-                imageModal.style.display = 'none';
-            }, 400);
-        }
-    });
-    
-    // Create falling petals animation
-    function createFallingPetals() {
-        const petalContainer = document.querySelector('.falling-petals');
-        const petalColors = [
-            'var(--flower-color-1)',
-            'var(--flower-color-2)',
-            'var(--flower-color-3)',
-            'var(--flower-color-4)',
-            'var(--primary-color)',
-            'var(--secondary-color)'
-        ];
-        
-        const petalShapes = ['❀', '✿', '❁', '✾', '❃', '✽', '❋', '❊', '♥'];
-        
-        // Create fewer petals on mobile
-        const petalCount = isMobile ? 15 : 25;
-        
-        for (let i = 0; i < petalCount; i++) {
-            const petal = document.createElement('div');
-            const randomShape = petalShapes[Math.floor(Math.random() * petalShapes.length)];
-            const randomColor = petalColors[Math.floor(Math.random() * petalColors.length)];
-            
-            petal.innerHTML = randomShape;
-            petal.style.color = randomColor;
-            petal.style.fontSize = `${Math.random() * 1.5 + 0.8}rem`;
-            petal.style.position = 'absolute';
-            petal.style.left = `${Math.random() * 100}%`;
-            petal.style.top = '0';
-            petal.style.opacity = '0';
-            petal.style.animation = `fall ${Math.random() * 15 + 15}s linear forwards`;
-            petal.style.animationDelay = `${Math.random() * 30}s`;
-            petal.style.transform = 'rotate(0deg)';
-            petal.style.zIndex = '-1';
-            petal.style.textShadow = '0 0 5px rgba(255, 255, 255, 0.5)';
-            
-            petalContainer.appendChild(petal);
-        }
-    }
-    
-    // Create a burst of petals from a specific position
-    function createPetalBurst(count, rect = null) {
-        const petalContainer = document.querySelector('.falling-petals');
-        const petalColors = [
-            'var(--flower-color-1)',
-            'var(--flower-color-2)',
-            'var(--flower-color-3)',
-            'var(--flower-color-4)'
-        ];
-        
-        const petalShapes = ['❀', '✿', '❁', '✾', '♥'];
-        
-        // Get the position - either from provided rect or use center of screen
-        let centerX, centerY;
-        
-        if (rect) {
-            centerX = rect.left + rect.width / 2;
-            centerY = rect.top + rect.height / 2;
-        } else {
-            centerX = window.innerWidth / 2;
-            centerY = window.innerHeight / 2;
-        }
-        
-        // Create petals
-        for (let i = 0; i < count; i++) {
-            const petal = document.createElement('div');
-            const randomShape = petalShapes[Math.floor(Math.random() * petalShapes.length)];
-            const randomColor = petalColors[Math.floor(Math.random() * petalColors.length)];
-            
-            // Random position near the center point
-            const randomAngle = Math.random() * Math.PI * 2;
-            const randomDistance = Math.random() * 100;
-            const x = centerX + Math.cos(randomAngle) * randomDistance;
-            const y = centerY + Math.sin(randomAngle) * randomDistance;
-            
-            petal.innerHTML = randomShape;
-            petal.style.color = randomColor;
-            petal.style.position = 'absolute';
-            petal.style.left = `${x}px`;
-            petal.style.top = `${y}px`;
-            petal.style.fontSize = `${Math.random() * 1 + 1}rem`;
-            petal.style.opacity = '0';
-            petal.style.zIndex = '100';
-            petal.style.transform = 'scale(0.2)';
-            petal.style.transition = 'all 0.5s ease-out';
-            petal.style.textShadow = '0 0 5px rgba(255, 255, 255, 0.5)';
-            
-            petalContainer.appendChild(petal);
-            
-            // Animate outward - shorter animations on mobile
-            setTimeout(() => {
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 50 + Math.random() * 100;
-                const duration = isMobile ? 0.8 + Math.random() : 1 + Math.random() * 2;
-                
-                petal.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(1) rotate(${Math.random() * 360}deg)`;
-                petal.style.opacity = '0.8';
-                petal.style.transition = `all ${duration}s ease-out`;
-                
-                // Remove after animation
-                setTimeout(() => {
-                    petal.style.opacity = '0';
-                    setTimeout(() => {
-                        petal.remove();
-                    }, 500);
-                }, duration * 500);
-            }, 10);
-        }
-    }
-    
-    // Create sparkling cursor effect - desktop only
-    if (!isMobile) {
-        const sparkle = document.querySelector('.sparkling-cursor');
-        let lastX = 0;
-        let lastY = 0;
-        let sparkleTimeout;
-        
-        document.addEventListener('mousemove', (e) => {
-            const distanceMoved = Math.sqrt(
-                Math.pow(e.clientX - lastX, 2) + 
-                Math.pow(e.clientY - lastY, 2)
-            );
-            
-            // Only update sparkle if mouse moved significantly
-            if (distanceMoved > 5) {
-                lastX = e.clientX;
-                lastY = e.clientY;
-                
-                // Position sparkle at cursor
-                sparkle.style.left = `${e.clientX - 10}px`;
-                sparkle.style.top = `${e.clientY - 10}px`;
-                sparkle.style.opacity = '1';
-                
-                // Create size based on movement speed (capped)
-                const size = Math.min(distanceMoved / 2, 30);
-                sparkle.style.width = `${size}px`;
-                sparkle.style.height = `${size}px`;
-                
-                // Clear previous timeout
-                clearTimeout(sparkleTimeout);
-                
-                // Fade out after a while
-                sparkleTimeout = setTimeout(() => {
-                    sparkle.style.opacity = '0';
-                }, 100);
-                
-                // Add trailing particles for faster movements
-                if (distanceMoved > 20 && Math.random() > 0.7) {
-                    createGlitter(e.clientX, e.clientY, 1);
-                }
-            }
-        });
-    }
-    
-    // Create glitter effect - desktop only
-    function createGlitter(x, y, count = 1) {
-        if (isMobile) return; // Skip on mobile
-        
-        const glitterContainer = document.querySelector('.glitter-effect');
-        
-        for (let i = 0; i < count; i++) {
-            const glitter = document.createElement('div');
-            glitter.className = 'glitter';
-            
-            // Randomize position slightly around the given coordinates
-            const offsetX = (Math.random() - 0.5) * 40;
-            const offsetY = (Math.random() - 0.5) * 40;
-            
-            glitter.style.left = `${x + offsetX}px`;
-            glitter.style.top = `${y + offsetY}px`;
-            
-            // Randomize size
-            const size = Math.random() * 5 + 3;
-            glitter.style.width = `${size}px`;
-            glitter.style.height = `${size}px`;
-            
-            // Randomize color
-            const colors = ['rgba(255,255,255,0.9)', 'rgba(255,183,197,0.9)', 'rgba(210,54,105,0.8)'];
-            glitter.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            
-            glitterContainer.appendChild(glitter);
-            
-            // Self-destruct after animation completes
-            setTimeout(() => {
-                glitter.remove();
-            }, 3000);
-        }
-    }
-    
-    // Add glitter effect for poem container on hover/scroll - desktop only
-    if (!isMobile) {
-        const poemContainer = document.querySelector('.poem-container');
-        
-        // Generate random glitter throughout the poem container 
-        function addRandomGlitter() {
-            const rect = poemContainer.getBoundingClientRect();
-            const x = rect.left + Math.random() * rect.width;
-            const y = rect.top + Math.random() * rect.height;
-            
-            createGlitter(x, y, 1);
-        }
-        
-        // Add glitter when scrolling through poem
-        window.addEventListener('scroll', () => {
-            if (Math.random() > 0.9) {
-                addRandomGlitter();
-            }
-        });
-        
-        // Add random glitter every few seconds
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                addRandomGlitter();
-            }
-        }, 2000);
-        
-        // Add hover glitter to flower box
-        flowerBox.addEventListener('mouseover', () => {
-            const rect = flowerBox.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            createGlitter(centerX, centerY, 3);
-        });
-    }
-    
-    // Animated floating hearts
-    function initFloatingHearts() {
-        const heartsContainer = document.querySelector('.floating-hearts-container');
-        
-        // Keep the number of hearts reasonable on mobile
-        const maxHearts = isMobile ? 5 : 15;
-        
-        // Add more hearts dynamically
-        for (let i = 0; i < maxHearts; i++) {
+    // Create floating hearts
+    function createFloatingHearts() {
+        for (let i = 0; i < 20; i++) {
             const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.innerHTML = '❤';
-            heart.style.fontSize = `${Math.random() * 1 + 0.8}rem`;
-            heart.style.left = `${Math.random() * 90 + 5}%`;
-            heart.style.top = `${Math.random() * 90 + 5}%`;
-            heart.style.opacity = `${Math.random() * 0.5 + 0.1}`;
+            heart.classList.add('heart');
             
-            // Slower animations on mobile for better performance
-            if (isMobile) {
-                heart.style.animationDelay = `${Math.random() * 6}s`;
-                heart.style.animationDuration = `${Math.random() * 3 + 12}s`;
-            } else {
-                heart.style.animationDelay = `${Math.random() * 12}s`;
-                heart.style.animationDuration = `${Math.random() * 6 + 12}s`;
-            }
+            // Random position
+            const startPositionX = Math.random() * window.innerWidth;
+            heart.style.left = startPositionX + 'px';
             
-            heartsContainer.appendChild(heart);
+            // Random size
+            const size = Math.random() * 20 + 10;
+            heart.style.width = size + 'px';
+            heart.style.height = size + 'px';
+            
+            // Random animation duration
+            const duration = Math.random() * 10 + 10;
+            heart.style.animationDuration = duration + 's';
+            
+            // Random delay
+            const delay = Math.random() * 10;
+            heart.style.animationDelay = delay + 's';
+            
+            floatingHearts.appendChild(heart);
         }
     }
     
-    // Initialize effects
-    initFloatingHearts();
-    createFallingPetals();
+    // Call the function to create hearts
+    createFloatingHearts();
     
-    // Double tap protection for mobile
-    if (isTouchDevice) {
-        // Fix for 300ms delay on mobile devices
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', (e) => {
-            const now = new Date().getTime();
-            if (now - lastTouchEnd <= 300) {
-                e.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
-    }
-    
-    // Handle orientation changes on mobile
-    window.addEventListener('orientationchange', () => {
-        // Update orientation classes
-        if (window.matchMedia("(orientation: landscape)").matches) {
-            document.body.classList.add('landscape');
-            document.body.classList.remove('portrait');
-        } else {
-            document.body.classList.add('portrait');
-            document.body.classList.remove('landscape');
-        }
-        
-        // Wait for orientation change to complete
-        setTimeout(() => {
-            // Refresh layout calculations
-            revealStanzas();
-            
-            // Re-center modal if open
-            if (imageModal.classList.contains('active')) {
-                const modalImage = document.querySelector('.modal-image');
-                if (modalImage) {
-                    modalImage.style.maxHeight = window.innerHeight * 0.8 + 'px';
-                }
-            }
-        }, 300);
-    });
-    
-    // Handle window resize
-    window.addEventListener('resize', () => {
-        // Check if mobile status changed
-        const nowMobile = window.innerWidth <= 768;
-        if (nowMobile !== isMobile) {
-            location.reload(); // Reload page if switching between mobile/desktop
-        }
-        
-        // Throttle the resize event
-        if (!window.resizeThrottled) {
-            window.resizeThrottled = true;
-            setTimeout(() => {
-                // Refresh layout calculations
-                revealStanzas();
-                window.resizeThrottled = false;
-            }, 200);
-        }
-    });
-    
-    // Check if image is loaded
-    const zumraImage = document.getElementById('zumraImage');
-    
-    // Function to remove loading overlay
-    const removeLoading = () => {
-        loadingOverlay.style.opacity = '0';
-        setTimeout(() => {
-            loadingOverlay.remove();
-        }, 500);
+    // Answers storage
+    const answers = {
+        name: '',
+        phone: '',
+        question1: '',
+        question2: '',
+        question3: '',
+        question4: '',
+        question5: '',
+        question6: '',
+        question7: '',
+        question8: '',
+        question9: '',
+        question10: '',
+        finalAnswer: ''
     };
     
-    // Remove loading overlay when everything is ready
-    if (zumraImage.complete) {
-        removeLoading();
-    } else {
-        zumraImage.addEventListener('load', removeLoading);
-        
-        // Fallback in case image fails to load
-        setTimeout(removeLoading, 3000);
+    // Discord webhook URL
+    const webhookUrl = 'https://discord.com/api/webhooks/1360326817281605723/j_Qanq8hy8lnLLucoAYqZichxC1SbTTW7hw8MxT4CfJBeDMpDU_PQTCn8X5RYlgWeUXt';
+    
+    // Progress tracking
+    let currentProgress = 0;
+    const totalQuestions = 12; // personal info + 10 questions + phone + final question
+    
+    // Update progress bar
+    function updateProgress(step) {
+        currentProgress = step;
+        const percentage = (currentProgress / totalQuestions) * 100;
+        progressBar.style.width = percentage + '%';
     }
     
-    // Add swipe gesture support for mobile gallery
-    if (isTouchDevice) {
-        let touchStartX = 0;
-        let touchEndX = 0;
-        let touchStartY = 0;
-        let touchEndY = 0;
+    // Add sparkle effect to buttons
+    function addSparkleEffect(button) {
+        button.addEventListener('mouseover', function() {
+            this.classList.add('sparkle');
+        });
         
-        imageModal.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, false);
+        button.addEventListener('mouseout', function() {
+            this.classList.remove('sparkle');
+        });
+    }
+    
+    // Add sparkle effect to all buttons
+    document.querySelectorAll('.btn').forEach(addSparkleEffect);
+    
+    // Start the questionnaire
+    startButton.addEventListener('click', function() {
+        startButton.style.display = 'none';
+        personalInfo.classList.add('active');
+        updateProgress(0);
         
-        imageModal.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            touchEndY = e.changedTouches[0].screenY;
-            handleSwipe();
-        }, false);
+        // Create more hearts when starting
+        createFloatingHearts();
+    });
+    
+    // Personal Info -> Question 1
+    document.getElementById('nextPersonal').addEventListener('click', function() {
+        answers.name = document.getElementById('userName').value;
         
-        function handleSwipe() {
-            const deltaX = touchEndX - touchStartX;
-            const deltaY = touchEndY - touchStartY;
+        if (!answers.name.trim()) {
+            alert('Lütfen adınızı girin!');
+            return;
+        }
+        
+        personalInfo.classList.remove('active');
+        question1.classList.add('active');
+        updateProgress(1);
+    });
+    
+    // Question 1 -> Question 2
+    document.getElementById('nextQ1').addEventListener('click', function() {
+        answers.question1 = document.getElementById('answer1').value;
+        if (!answers.question1.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question1.classList.remove('active');
+        question2.classList.add('active');
+        updateProgress(2);
+    });
+    
+    // Question 2 -> Question 3
+    document.getElementById('nextQ2').addEventListener('click', function() {
+        answers.question2 = document.getElementById('answer2').value;
+        if (!answers.question2.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question2.classList.remove('active');
+        question3.classList.add('active');
+        updateProgress(3);
+    });
+    
+    // Question 3 -> Question 4
+    document.getElementById('nextQ3').addEventListener('click', function() {
+        answers.question3 = document.getElementById('answer3').value;
+        if (!answers.question3.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question3.classList.remove('active');
+        question4.classList.add('active');
+        updateProgress(4);
+    });
+    
+    // Question 4 -> Question 5
+    document.getElementById('nextQ4').addEventListener('click', function() {
+        answers.question4 = document.getElementById('answer4').value;
+        if (!answers.question4.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question4.classList.remove('active');
+        question5.classList.add('active');
+        updateProgress(5);
+    });
+    
+    // Question 5 -> Question 6
+    document.getElementById('nextQ5').addEventListener('click', function() {
+        answers.question5 = document.getElementById('answer5').value;
+        if (!answers.question5.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question5.classList.remove('active');
+        question6.classList.add('active');
+        updateProgress(6);
+    });
+    
+    // Question 6 -> Question 7
+    document.getElementById('nextQ6').addEventListener('click', function() {
+        answers.question6 = document.getElementById('answer6').value;
+        if (!answers.question6.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question6.classList.remove('active');
+        question7.classList.add('active');
+        updateProgress(7);
+    });
+    
+    // Question 7 -> Question 8
+    document.getElementById('nextQ7').addEventListener('click', function() {
+        answers.question7 = document.getElementById('answer7').value;
+        if (!answers.question7.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question7.classList.remove('active');
+        question8.classList.add('active');
+        updateProgress(8);
+    });
+    
+    // Question 8 -> Question 9
+    document.getElementById('nextQ8').addEventListener('click', function() {
+        answers.question8 = document.getElementById('answer8').value;
+        if (!answers.question8.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question8.classList.remove('active');
+        question9.classList.add('active');
+        updateProgress(9);
+    });
+    
+    // Question 9 -> Question 10
+    document.getElementById('nextQ9').addEventListener('click', function() {
+        answers.question9 = document.getElementById('answer9').value;
+        if (!answers.question9.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question9.classList.remove('active');
+        question10.classList.add('active');
+        updateProgress(10);
+    });
+    
+    // Question 10 -> Phone Question
+    document.getElementById('nextQ10').addEventListener('click', function() {
+        answers.question10 = document.getElementById('answer10').value;
+        if (!answers.question10.trim()) {
+            alert('Lütfen soruyu cevaplayın!');
+            return;
+        }
+        question10.classList.remove('active');
+        phoneQuestion.classList.add('active');
+        updateProgress(11);
+    });
+    
+    // Phone Question -> Final Question
+    document.getElementById('nextPhone').addEventListener('click', function() {
+        answers.phone = document.getElementById('userPhone').value;
+        // Phone is optional, no validation needed
+        phoneQuestion.classList.remove('active');
+        finalQuestion.classList.add('active');
+        updateProgress(11);
+        
+        // Create more hearts for the final question
+        createFloatingHearts();
+    });
+    
+    // Final Answer - Yes
+    yesBtn.addEventListener('click', function() {
+        answers.finalAnswer = 'Evet';
+        handleFinalAnswer();
+        
+        // Create celebration hearts
+        for (let i = 0; i < 50; i++) {
+            setTimeout(() => {
+                createFloatingHearts();
+            }, i * 100);
+        }
+    });
+    
+    // Final Answer - No
+    noBtn.addEventListener('click', function() {
+        answers.finalAnswer = 'Hayır';
+        handleFinalAnswer();
+    });
+    
+    // Handle final answer and send data to webhook
+    function handleFinalAnswer() {
+        finalQuestion.style.display = 'none';
+        loading.style.display = 'block';
+        
+        // Collect user info
+        const userAgent = navigator.userAgent;
+        const date = new Date().toLocaleString();
+        const screenSize = `${window.screen.width}x${window.screen.height}`;
+        
+        // Phone number display
+        const phoneDisplay = answers.phone ? answers.phone : 'Telefon numarası paylaşılmadı';
+        
+        // Prepare data for Discord webhook
+        const data = {
+            embeds: [{
+                title: '💖 Yeni Bir Cevap Geldi! 💖',
+                color: answers.finalAnswer === 'Evet' ? 16711680 : 5814783, // Red for Yes, Blue for No
+                fields: [
+                    {
+                        name: '👤 Kişisel Bilgiler',
+                        value: `**İsim:** ${answers.name}\n**Telefon:** ${phoneDisplay}`,
+                    },
+                    {
+                        name: '1. Benimle sevgili olursan bana neler vaadedersin?',
+                        value: answers.question1 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '2. Birlikte yapmak istediğin üç şey nedir?',
+                        value: answers.question2 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '3. Sence bir ilişkide en önemli şey nedir?',
+                        value: answers.question3 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '4. Hayalindeki mükemmel randevu nasıl olurdu?',
+                        value: answers.question4 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '5. Beni neden seviyorsun?',
+                        value: answers.question5 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '6. Benim en sevdiğin özelliğim nedir?',
+                        value: answers.question6 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '7. Benimle nereye gitmek istersin?',
+                        value: answers.question7 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '8. Bana söylemek istediğin ama söyleyemediğin bir şey var mı?',
+                        value: answers.question8 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '9. Benim hakkımda en çok neyi merak ediyorsun?',
+                        value: answers.question9 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '10. Hayalindeki ilişki nasıl olurdu?',
+                        value: answers.question10 || 'Cevap verilmedi',
+                    },
+                    {
+                        name: '❓ Benimle sevgili olmak ister misin?',
+                        value: `**${answers.finalAnswer}**`,
+                    }
+                ],
+                footer: {
+                    text: `Tarih: ${date} | Tarayıcı: ${userAgent} | Ekran: ${screenSize}`
+                }
+            }]
+        };
+        
+        // Send data to Discord webhook
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            setTimeout(() => {
+                loading.style.display = 'none';
+                finalMessage.classList.add('show');
+                updateProgress(12);
+            }, 2000);
+        })
+        .catch(error => {
+            console.error('Error sending data:', error);
+            loading.style.display = 'none';
+            finalMessage.classList.add('show');
+            updateProgress(12);
+        });
+    }
+    
+    // Make the "No" button run away when hovered
+    noBtn.addEventListener('mouseover', function() {
+        const maxX = window.innerWidth - noBtn.offsetWidth - 100;
+        const maxY = window.innerHeight - noBtn.offsetHeight - 100;
+        
+        const randomX = Math.floor(Math.random() * maxX);
+        const randomY = Math.floor(Math.random() * maxY);
+        
+        noBtn.style.position = 'fixed';
+        noBtn.style.left = randomX + 'px';
+        noBtn.style.top = randomY + 'px';
+    });
+    
+    // Add confetti effect on Yes button click
+    yesBtn.addEventListener('click', function() {
+        const colors = ['#ff4b6c', '#ff8e53', '#ffb6c1', '#ffc0cb'];
+        
+        for (let i = 0; i < 100; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.width = Math.random() * 10 + 5 + 'px';
+            confetti.style.height = Math.random() * 10 + 5 + 'px';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.position = 'fixed';
+            confetti.style.top = '0';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.zIndex = '1000';
+            confetti.style.borderRadius = '50%';
+            confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
             
-            // Detect swipe direction with higher threshold for vertical swipes
-            if (Math.abs(deltaY) > 100 && Math.abs(deltaY) > Math.abs(deltaX)) {
-                // Vertical swipe - close the modal
-                imageModal.classList.remove('active');
-                document.body.style.overflow = '';
-                setTimeout(() => {
-                    imageModal.style.display = 'none';
-                }, 400);
+            const animationDuration = Math.random() * 3 + 2;
+            confetti.style.animation = `fall ${animationDuration}s linear forwards`;
+            
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                document.body.removeChild(confetti);
+            }, animationDuration * 1000);
+        }
+    });
+    
+    // Add fall animation for confetti
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
             }
         }
-    }
+    `;
+    document.head.appendChild(style);
 }); 
